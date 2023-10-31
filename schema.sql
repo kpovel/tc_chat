@@ -1,33 +1,25 @@
-drop table if exists seen_by;
 drop table if exists message;
+drop table if exists seen_by;
 drop table if exists chat_room_member;
 drop table if exists chat_room;
 drop type if exists room_type;
 drop table if exists "user";
 drop table if exists avatar;
 drop type if exists user_type;
-drop extension pgcrypto;
+drop extension if exists pgcrypto;
 
 create extension pgcrypto;
-
-create table avatar (
-    id   serial primary key,
-    name varchar(60) not null
-);
 
 create type user_type as enum ('user', 'admin');
 create table "user" (
     id         serial primary key,
     username   varchar(50)             not null,
     user_type  user_type               not null,
-    avatar_id  serial,
     login      varchar(50) unique      not null,
     email      varchar(50) unique      not null,
     password   char(60)                not null,
     created_at timestamp default now() not null,
-    last_seen  timestamp default now() not null,
-
-    foreign key (avatar_id) references avatar (id)
+    last_seen  timestamp default now() not null
 );
 
 create type room_type as enum ('private', 'public');
